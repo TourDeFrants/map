@@ -1,0 +1,23 @@
+:host {
+    height: 700px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.form-container {
+    position: relative;
+    width: 300px;
+    border: 1px solid #eeeeee;
+}
+p {
+    position: relative;
+    left: 10%;
+}
+input {
+    display: block;
+    margin: 0 auto;
+}
+input[type=submit] {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
