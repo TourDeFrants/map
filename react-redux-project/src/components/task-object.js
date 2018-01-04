@@ -7,7 +7,8 @@ class TaskObject extends React.Component {
         super(props);
         this.state = {
             edit: false,
-            end: false
+            end: false,
+            error: ''
         }
     };
 
@@ -22,12 +23,17 @@ class TaskObject extends React.Component {
     save = () => {
         let newTaskName = this.refs.newTaskName.value === '' ? 'Новая Задача' : this.refs.newTaskName.value;
         let newTaskDesc = this.refs.newTaskDesc.value === '' ? 'Описание к задаче' : this.refs.newTaskDesc.value;
-        let obj = {
-            newTaskName: newTaskName,
-            newTaskDesc: newTaskDesc
-        };
-        this.props.updateTask(obj, this.props.index);
-        this.setState({edit: false});
+        let regex = new RegExp('[^a-zA-Z0-9]+');
+        if (!regex.test(newTaskName) && newTaskName.length > 3 && newTaskName.length < 9) {
+            let obj = {
+                newTaskName: newTaskName,
+                newTaskDesc: newTaskDesc
+            };
+            this.props.updateTask(obj, this.props.index);
+            this.setState({edit: false});
+        } else {
+            this.setState({error: 'name must be from 4 to 8 literal, and only alpha & numeric'});
+        }
     };
 
     endTime = () => {
@@ -56,6 +62,10 @@ class TaskObject extends React.Component {
         }
     };
 
+    emptyError = () => {
+        this.setState({error: ''})
+    };
+
     render() {
         return (
             <div>
@@ -64,9 +74,14 @@ class TaskObject extends React.Component {
                 <p>Time end: {this.convertTime(this.props.task.timeEnd)}</p>
                 <p>Task name: {
                     this.state.edit ? (
-                        <input ref="newTaskName" defaultValue={this.props.task.taskName}/>
+                        <input ref="newTaskName" onBlur={ this.emptyError }  defaultValue={this.props.task.taskName}/>
                     ) : this.props.task.taskName
                 }</p>
+                {
+                    this.state.error !== '' ? (
+                        <p>{this.state.error}</p>
+                    ) : ''
+                }
                 <p>Task desc: {
                     this.state.edit ? (
                         <input ref="newTaskDesc" defaultValue={this.props.task.taskDesc}/>
